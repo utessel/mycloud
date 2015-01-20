@@ -14,5 +14,16 @@ This will trigger a download via tftp of 'startup.sh'
 
 That file will trigger a download of "uImage":
 
-To get this, get the GPL Sources from WD and compile the kernel.
+To get this, get the GPL Sources from WD.
+Install a cross compiler:
+sudo apt-get install g++-4.7-arm-linux-gnueabihf
+
+export ARCH=armhf
+export 
+
+compile the kernel:
+install 
+
+If you need a working busybox:
+use build-sys.sh
 

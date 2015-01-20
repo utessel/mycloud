@@ -1,18 +1,31 @@
-export ARCH=arm
+export ARCH=armhf
 export CROSS_COMPILE=arm-linux-gnueabihf-
-if [ -e busybox-1.23.0.tar.bz2 ]
+if [ ! -e busybox-1.23.0.tar.bz2 ]
 then
   wget http://www.busybox.net/downloads/busybox-1.23.0.tar.bz2
+else 
+  echo "Busybox already loaded"
 fi
-if [ -e busybox-1.23.0 ]
+if [ ! -e busybox-1.23.0 ]
 then
   tar fax busybox-1.23.0.tar.bz2
+else
+  echo "Busybox already untared"
 fi
+
 cd busybox-1.23.0
-cp ../busybox-config .config
+
+if [ ! -e .config ]
+then
+  cp ../busybox-config .config
+make oldconfig
+fi
+
+make -j8 
 make -j8 install
 
 cd _install
+
 mkdir {bin,dev,sbin,etc,proc,sys,lib}
 mkdir lib/modules
 mkdir dev/pts
@@ -38,19 +51,20 @@ echo "#!/bin/sh" >usr/share/udhcpc/default.script
 echo "case \"\$1\" in" >>usr/share/udhcpc/default.script
 echo "   renew|bound)" >>usr/share/udhcpc/default.script
 echo "     /sbin/ifconfig \$interface \$ip \$BROADCAST \$NETMASK" >>usr/share/udhcpc/default.script
+# note: route to set gw is missing
 echo "     ;;" >>usr/share/udhcpc/default.script
 echo "esac" >>usr/share/udhcpc/default.script
 echo "exit 0" >>usr/share/udhcpc/default.script
 chmod +x usr/share/udhcpc/default.script
+
+echo "creating device files using sudo mknod"
 
 sudo mknod dev/null c 1 3
 sudo mknod dev/tty c 5 0
 sudo mknod dev/console c 5 1
 
 find . | cpio -H newc -o > ../../initramfs.cpio
-#cd ../..
-#cat initramfs.cpio | gzip > initramfs.cpio.gz
-#cp initramfs.cpio.gz packages/kernel_3.2/
-#cd packages/kernel_3.2
-#make uImage
-#cp _bld/arch/arm/boot/uImage /home/tftp/
+cd ../..
+cat initramfs.cpio | gzip > initramfs.cpio.gz
+
+
