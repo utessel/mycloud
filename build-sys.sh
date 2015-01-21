@@ -9,6 +9,7 @@ if [ ! -e $kernel ]
 then
   echo "please download the GPL file from WD"
   echo "and unzip them to ./wd/"
+  exit 1
 fi
 
 if [ ! -e $busybox.tar.bz2 ]
