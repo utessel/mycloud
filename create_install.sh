@@ -33,7 +33,9 @@ echo "#!/bin/sh" >usr/share/udhcpc/default.script
 echo "case \"\$1\" in" >>usr/share/udhcpc/default.script
 echo "   renew|bound)" >>usr/share/udhcpc/default.script
 echo "     /sbin/ifconfig \$interface \$ip \$BROADCAST \$NETMASK" >>usr/share/udhcpc/default.script
-# note: route to set gw is missing
+echo "     for i in $router ; do" >> usr/share/udhcpc/default.script
+echo "       route add default gw $i dev $interface" >> usr/share/udhcpc/default.script
+echo "     done" >> usr/share/udhcpc/default.script
 echo "     ;;" >>usr/share/udhcpc/default.script
 echo "esac" >>usr/share/udhcpc/default.script
 echo "exit 0" >>usr/share/udhcpc/default.script

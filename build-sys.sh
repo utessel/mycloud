@@ -49,3 +49,12 @@ fakeroot ./create_install.sh $busybox $kernel
 
 cat initramfs.cpio | gzip > initramfs.cpio.gz
 
+cp kernel-config $kernel/_bld/.config
+cd $kernel
+make uImage
+
+cd $current
+cp $kernel/_bld/arch/arm/boot/uImage .
+
+echo "Done: uImage generated"
+
