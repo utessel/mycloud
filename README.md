@@ -60,7 +60,7 @@ use `build-sys.sh` for this:
 
 Requirements:
 - it needs the tar file with GPL Sources from WD
-- extract this to the same directoy as the build-sys script
+- extract this to a 'wd' directoy parallel to the build-sys script
 - you have to install a cross compiler `sudo apt-get install g++-4.7-arm-linux-gnueabihf`
 - the script itself will download and compile busybox and finally generate a uImage that can be loaded via tftp to the box.
 - Especially the busybox can be configured via `make menuconfig` if you need different tools

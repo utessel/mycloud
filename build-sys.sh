@@ -1,41 +1,47 @@
 export ARCH=armhf
 export CROSS_COMPILE=arm-linux-gnueabihf-
-if [ ! -e busybox-1.23.0.tar.bz2 ]
+
+current=`pwd`
+kernel="$current/wd/packages/kernel_3.2"
+busybox="busybox-1.23.0"
+
+if [ ! -e $busybox.tar.bz2 ]
 then
-  wget http://www.busybox.net/downloads/busybox-1.23.0.tar.bz2
-else 
-  echo "Busybox already loaded"
+  wget http://www.busybox.net/downloads/$busybox.tar.bz2
 fi
-if [ ! -e busybox-1.23.0 ]
+if [ ! -e $busybox ]
 then
-  tar fax busybox-1.23.0.tar.bz2
-else
-  echo "Busybox already untared"
+  tar fax $busybox.tar.bz2
 fi
 
-cd busybox-1.23.0
+cd $busybox
 
 if [ ! -e .config ]
 then
-  cp ../busybox-config .config
-make oldconfig
+  cp $current/busybox-config .config
+  make oldconfig
 fi
 
-make -j8 
-make -j8 install
+make -j8 && make -j8 install
 
-if [ ! -e ../wd/packages/kernel_3.2/_bin/lib ]
+if [ "$?" != "0" ]
+then
+  echo "generation of busybox failed?!"
+  exit 1
+fi
+
+if [ ! -e $kernel/_bin/lib ]
 then
   # compile kernel at least once
-  cd ../wd/packages/kernel_3.2
+  cd $kernel
   make
-  cd ../../../../busybox-1.23.0
+  cd $current/$busybox
 fi
 
 cd _install
 
 mkdir {bin,dev,sbin,etc,proc,sys}
-cp -R ../../wd/packages/kernel_3.2/_bin/lib .
+cp -R $kernel/_bin/lib .
 mkdir dev/pts
 mkdir -p usr/share/udhcpc
 
@@ -71,7 +77,7 @@ sudo mknod dev/null c 1 3
 sudo mknod dev/tty c 5 0
 sudo mknod dev/console c 5 1
 
-find . | cpio -H newc -o > ../../initramfs.cpio
-cd ../..
+find . | cpio -H newc -o > $current/initramfs.cpio
+cd $current
 cat initramfs.cpio | gzip > initramfs.cpio.gz
 
