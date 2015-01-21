@@ -24,10 +24,18 @@ fi
 make -j8 
 make -j8 install
 
+if [ ! -e ../wd/packages/kernel_3.2/_bin/lib ]
+then
+  # compile kernel at least once
+  cd ../wd/packages/kernel_3.2
+  make
+  cd ../../../../busybox-1.23.0
+fi
+
 cd _install
 
-mkdir {bin,dev,sbin,etc,proc,sys,lib}
-mkdir lib/modules
+mkdir {bin,dev,sbin,etc,proc,sys}
+cp -R ../../wd/packages/kernel_3.2/_bin/lib .
 mkdir dev/pts
 mkdir -p usr/share/udhcpc
 
@@ -66,5 +74,4 @@ sudo mknod dev/console c 5 1
 find . | cpio -H newc -o > ../../initramfs.cpio
 cd ../..
 cat initramfs.cpio | gzip > initramfs.cpio.gz
-
 
