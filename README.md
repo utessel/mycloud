@@ -21,7 +21,7 @@ to anything on the disk) can be triggered to use TFTP when receiving a "magic pa
 Trigger TFTP
 ------------
 
-Obviously you need to know how to setup this. "dnsmasq" is your friend for this.
+Obviously you need to know how to setup this. "dnsmasq" is your friend!
 
 You also need to send a "Magic Packet" to trigger the TFTP load.
 
@@ -53,8 +53,8 @@ The different Startup Files
 - `startup-uImage.sh`
   This will trigger the download of uImage and start the system inside the initramfs of uImage
 
-Complete new setup
-==================
+Complete new setup or heavy repair
+==================================
 
 use `build-sys.sh` for this:
 
@@ -65,3 +65,10 @@ Requirements:
 - the script itself will download and compile busybox and finally generate a uImage that can be loaded via tftp to the box.
 - Especially the busybox can be configured via `make menuconfig` if you need different tools
 - ...?
+
+You get an environment 
+- that can be accessed via telnet
+- that can mount your disk 
+- that can do nfs mounts
+- allows you to edit files
+- ...
