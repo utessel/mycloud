@@ -5,6 +5,12 @@ current=`pwd`
 kernel="$current/wd/packages/kernel_3.2"
 busybox="busybox-1.23.0"
 
+if [ ! -e $kernel ]
+then
+  echo "please download the GPL file from WD"
+  echo "and unzip them to ./wd/"
+fi
+
 if [ ! -e $busybox.tar.bz2 ]
 then
   wget http://www.busybox.net/downloads/$busybox.tar.bz2
