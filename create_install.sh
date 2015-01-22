@@ -33,13 +33,18 @@ echo "#!/bin/sh" >usr/share/udhcpc/default.script
 echo "case \"\$1\" in" >>usr/share/udhcpc/default.script
 echo "   renew|bound)" >>usr/share/udhcpc/default.script
 echo "     /sbin/ifconfig \$interface \$ip \$BROADCAST \$NETMASK" >>usr/share/udhcpc/default.script
-echo "     for i in $router ; do" >> usr/share/udhcpc/default.script
-echo "       route add default gw $i dev $interface" >> usr/share/udhcpc/default.script
+echo "     for i in \$router ; do" >> usr/share/udhcpc/default.script
+echo "       route add default gw \$i dev \$interface" >> usr/share/udhcpc/default.script
 echo "     done" >> usr/share/udhcpc/default.script
 echo "     ;;" >>usr/share/udhcpc/default.script
 echo "esac" >>usr/share/udhcpc/default.script
 echo "exit 0" >>usr/share/udhcpc/default.script
 chmod +x usr/share/udhcpc/default.script
+
+if [ -e $current/extrafiles.tar.gz ]
+then
+  tar fax $current/extrafiles.tar.gz
+fi
 
 mknod dev/null c 1 3
 mknod dev/tty c 5 0
